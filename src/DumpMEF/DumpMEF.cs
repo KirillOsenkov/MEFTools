@@ -35,12 +35,7 @@ class DumpMef
 
     private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
     {
-        var assemblyShortName = args.Name;
-        int index = assemblyShortName.IndexOf(',');
-        if (index > -1)
-        {
-            assemblyShortName = assemblyShortName.Substring(0, index);
-        }
+        var assemblyShortName = new AssemblyName(args.Name).Name;
 
         foreach (var folder in assemblyFolders)
         {
