@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 class DumpMef
 {
+    private static readonly HashSet<string> assemblyFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
     public static void Main(string[] args)
     {
         if (args.Length != 1)
@@ -20,25 +24,64 @@ class DumpMef
             return;
         }
 
+        assemblyFolders.Add(Environment.CurrentDirectory);
+        assemblyFolders.Add(Path.GetDirectoryName(filePath));
+
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
         var catalog = new AssemblyCatalog(filePath);
         DumpCatalog(catalog);
     }
 
+    private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+    {
+        var assemblyShortName = args.Name;
+        int index = assemblyShortName.IndexOf(',');
+        if (index > -1)
+        {
+            assemblyShortName = assemblyShortName.Substring(0, index);
+        }
+
+        foreach (var folder in assemblyFolders)
+        {
+            var candidate = Path.Combine(folder, assemblyShortName + ".dll");
+            if (File.Exists(candidate))
+            {
+                var name = AssemblyName.GetAssemblyName(candidate);
+                return Assembly.Load(name);
+            }
+        }
+
+        return null;
+    }
+
     private static void DumpCatalog(AssemblyCatalog catalog)
     {
-        foreach (var composablePartDefinition in catalog)
+        foreach (var composablePartDefinition in catalog.OrderBy(s => s.ToString()))
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(composablePartDefinition.ToString());
-            Console.WriteLine("  Exports:");
-            foreach (var export in composablePartDefinition.ExportDefinitions.OrderBy(e => e.ContractName))
+
+            if (composablePartDefinition.ExportDefinitions.Any())
             {
-                Console.WriteLine("    " + export.ContractName);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("  Exports:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                foreach (var export in composablePartDefinition.ExportDefinitions.OrderBy(e => e.ContractName))
+                {
+                    Console.WriteLine("    " + export.ContractName);
+                }
             }
 
-            Console.WriteLine("  Imports:");
-            foreach (var import in composablePartDefinition.ImportDefinitions.OrderBy(e => e.ContractName))
+            if (composablePartDefinition.ImportDefinitions.Any())
             {
-                Console.WriteLine("    " + import.ContractName);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("  Imports:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                foreach (var import in composablePartDefinition.ImportDefinitions.OrderBy(e => e.ContractName))
+                {
+                    Console.WriteLine("    " + import.ContractName);
+                }
             }
         }
     }
