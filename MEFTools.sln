@@ -1,0 +1,18 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumpMEF", "src\DumpMEF\DumpMEF.csproj", "{481EB11D-098C-44F0-AE64-AC6E56700A42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{481EB11D-098C-44F0-AE64-AC6E56700A42}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{481EB11D-098C-44F0-AE64-AC6E56700A42}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{481EB11D-098C-44F0-AE64-AC6E56700A42}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{481EB11D-098C-44F0-AE64-AC6E56700A42}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
