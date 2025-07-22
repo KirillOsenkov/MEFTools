@@ -30,6 +30,8 @@ class DumpMef
             return;
         }
 
+        filePath = Path.GetFullPath(filePath);
+
         assemblyFolders.Add(Environment.CurrentDirectory);
         assemblyFolders.Add(Path.GetDirectoryName(filePath));
 

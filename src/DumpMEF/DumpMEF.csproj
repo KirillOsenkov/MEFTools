@@ -2,9 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <OutputType>Exe</OutputType>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="15.8.117" />
+    <PackageReference Include="Microsoft.VisualStudio.Composition" Version="17.13.41" />
   </ItemGroup>
 </Project>
